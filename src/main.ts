@@ -1,33 +1,41 @@
-import { defineCommand } from "citty"
-import { execSync } from 'node:child_process'
-import { waitResponse } from "@gaute/await-response";
+import { waitResponse } from '@gaute/await-response'
+import { convertArgs, convertIfPort } from './utilsArgs'
+import { spawn } from 'node:child_process'
 
-export const command = defineCommand({
-  meta: {
-    name: "run-await-run",
-    version: "0.1.0",
-    description: "Run command, await response, run command",
-  },
-  args: {
-    run: {
-      type: "positional",
-      description: "Run first",
-      required: true,
-    },
-    await: {
-      type: "positional",
-      description: "await response",
-      required: true,
-    },
-    then: {
-      type: "positional",
-      description: "Then run",
-      required: true,
-    },
-  },
-  async run({ args }) {
-    execSync(args.run, { stdio: 'inherit' })
-    await waitResponse(args.await)
-    execSync(args.then, { stdio: 'inherit' })
-  },
-});
+export async function handleArgs(args: string[]) {
+  args = await convertArgs(args)
+  let method: 'HEAD' | 'GET' = 'HEAD'
+  if(args.includes('--get')) {
+    method = 'GET'
+    args = args.filter(a => a !== '--get')
+  }
+  let timeout: number | undefined = undefined
+  if(args.includes('--timeout')) {
+    const index = args.indexOf('--timeout')
+    timeout = parseInt(args[index + 1] ?? '')
+    if(Number.isNaN(timeout)) {
+      throw new Error('--timeout needs to be followed by a number')
+    }
+    args.splice(index, 2)
+  }
+  let interval: number | undefined = undefined
+  if(args.includes('--interval')) {
+    const index = args.indexOf('--interval')
+    interval = parseInt(args[index + 1] ?? '')
+    if(Number.isNaN(interval)) {
+      throw new Error('--interval needs to be followed by a number')
+    }
+    args.splice(index, 2)
+  }
+  if(args.length !== 3) {
+    throw new Error('expected: run-await-run <script> <url or port> <script>')
+  }
+  spawn(args[0]!, { shell: true, stdio: 'inherit' })
+  console.log('continue')
+  await waitResponse(convertIfPort(args[1]!), {
+    method,
+    timeout,
+    interval,
+  })
+  spawn(args[2]!, { shell: true, stdio: 'inherit' })
+}

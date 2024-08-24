@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { runMain } from "citty"
-import { command } from '../dist/main.js'
+import { handleArgs } from '../dist/main.js'
 
-runMain(command)
+const argv = process.argv.slice(2)
+handleArgs(argv)

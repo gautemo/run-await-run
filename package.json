@@ -1,14 +1,15 @@
 {
   "name": "run-await-run",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Run command, await response, run command",
   "type": "module",
   "bin": {
     "run-await-run": "./bin/index.js"
   },
   "scripts": {
-    "build": "rolldown -c",
-    "test": "run-await-run \"npm run hello\" http://localhost:3000/ \"npm run hello\"",
+    "build": "tsup ./src/main.ts --format esm --minify",
+    "test": "vitest",
+    "test-run-await-run": "run-await-run 'tsx ./playground/server.ts' http://localhost:8080/ hello",
     "hello": "echo \"yo\""
   },
   "repository": {
@@ -26,12 +27,14 @@
   },
   "homepage": "https://github.com/gautemo/run-await-run#readme",
   "dependencies": {
-    "@gaute/await-response": "npm:@jsr/gaute__await-response@^0.2.1",
-    "citty": "^0.1.6"
+    "@gaute/await-response": "npm:@jsr/gaute__await-response@^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",
-    "rolldown": "^0.12.2",
-    "typescript": "^5.5.4"
+    "h3": "^1.12.0",
+    "tsup": "^8.2.4",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   }
 }
