@@ -31,7 +31,6 @@ export async function handleArgs(args: string[]) {
     throw new Error('expected: run-await-run <script> <url or port> <script>')
   }
   spawn(args[0]!, { shell: true, stdio: 'inherit' })
-  console.log('continue')
   await waitResponse(convertIfPort(args[1]!), {
     method,
     timeout,
