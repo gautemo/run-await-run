@@ -1,6 +1,6 @@
 {
   "name": "run-await-run",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Run command, await response, run command",
   "type": "module",
   "bin": {
