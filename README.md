@@ -38,7 +38,7 @@ run-await-run [run-first] [url] [run-second]
 `position 3` (required): script to run when url responds  
 `--get` (optional): fetches the URL with a GET request. Default is a HEAD request  
 `--timeout` (optional): when to stop waiting in milliseconds. Default is 300000 milliseconds (5 minutes)  
-`--interval` (optional): how often to check if URL responds in milliseconds. Default is 50 milliseconds  
+`--interval` (optional): how often to check if URL responds in milliseconds. Default is 100 milliseconds  
 
 ### Handy features
 

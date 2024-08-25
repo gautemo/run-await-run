@@ -1,49 +1,34 @@
 import fs from 'node:fs/promises'
 
-export async function convertArgs(args: string[]) {
-  const argsConverted: string[] = []
-  const packageJSONString = await fs.readFile('package.json', { encoding: 'utf-8' })
-  const packageJSONScripts: Record<string, string> = JSON.parse(packageJSONString).scripts
-  for(const arg of groupArgs(args)) {
-    if(await argIsScript(arg, packageJSONScripts)) {
-      argsConverted.push(`npm run ${arg}`)
-    } else {
-      argsConverted.push(arg)
-    }
-  }
-  return argsConverted
-}
-
-function groupArgs(args: string[]) {
-  const argsGrouped: string[] = []
-  for(let i = 0; i < args.length; i++) {
-    if(args[i]?.startsWith(`'`) && args.slice(i + 1).some(a => a.endsWith(`'`))) {
-      const group = [args[i]]
-      let startQuotes = 1
-      for(let j = i + 1; j < args.length; j++) {
-        group.push(args[j])
-        if(args[j]?.startsWith(`'`)) {
-          startQuotes++
-        }
-        if(args[j]?.endsWith(`'`)) {
-          startQuotes--
-          if(startQuotes === 0) {
-            i = j
-            break
-          }
-        }
+export function getCommand(args: string[]) {
+  let arg = args[0] ?? ''
+  args.splice(0, 1)
+  if(arg?.startsWith(`'`)) {
+    let startQuotes = 1
+    for(let i = 0; i < args.length; i++) {
+      arg += ` ${args[i]}`
+      if(args[i]?.startsWith(`'`)) startQuotes++
+      if(args[i]?.endsWith(`'`)) startQuotes--
+      if(startQuotes === 0) {
+        args.splice(0, i + 1)
+        arg = arg.substring(1, arg.length - 1)
+        break
       }
-      const command = group.join(' ')
-      argsGrouped.push(command.substring(1, command.length - 1))
-    } else {
-      argsGrouped.push(args[i]!)
     }
   }
-  return argsGrouped
+  return arg
 }
 
-function argIsScript(arg: string, scripts: Record<string, string>) {
-  return Object.keys(scripts).includes(arg.split(' ')[0]!)
+export function addNpmRunIfargIsScript(arg: string, scripts: Record<string, string>) {
+  if(Object.keys(scripts).includes(arg.split(' ')[0]!)) {
+    return `npm run ${arg}`
+  }
+  return arg
+}
+
+export async function getPackageJSONScripts(): Promise<Record<string, string>> {
+  const packageJSONString = await fs.readFile('package.json', { encoding: 'utf-8' })
+  return JSON.parse(packageJSONString).scripts
 }
 
 export function convertIfPort(arg: string) {
@@ -56,24 +41,30 @@ export function convertIfPort(arg: string) {
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest
   
-  it('convert nothing', () => {
-    expect(groupArgs(['one', 'two'])).toStrictEqual(['one', 'two'])
+  it('get first command', () => {
+    expect(getCommand(['one', 'two', 'three'])).toBe('one')
+  })
+  
+  it('pop first command', () => {
+    const args = ['one', 'two', 'three']
+    getCommand(args)
+    expect(args.length).toBe(2)
   })
   
   it('combine commands', () => {
-    expect(groupArgs(['one', `'two`, `three'`])).toStrictEqual(['one', 'two three'])
+    expect(getCommand([`'one`, `two'`])).toBe('one two')
   })
 
   it('not combine nested commands', () => {
-    expect(groupArgs(['one', `'two`, `'sub`, `end-sub'`, `three'`])).toStrictEqual(['one', `two 'sub end-sub' three`])
+    expect(getCommand([`'one`, `'sub`, `end-sub'`, `two'`])).toBe(`one 'sub end-sub' two`)
   })
 
-  it('test is in package.json scripts', async () => {
-    expect(await argIsScript('test', { test: '' })).toBe(true)
+  it('add npm run', async () => {
+    expect(addNpmRunIfargIsScript('test', { test: '' })).toBe('npm run test')
   })
 
-  it('convert args', async () => {
-    expect(await convertArgs(['test', 'http://localhost:3000', `'npx`, `yo'`])).toStrictEqual(['npm run test', 'http://localhost:3000', 'npx yo'])
+  it('not add npm run', async () => {
+    expect(addNpmRunIfargIsScript('test', { })).toBe('test')
   })
 
   it('convert port', () => {
