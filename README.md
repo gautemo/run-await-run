@@ -17,7 +17,7 @@ npm i -D run-await-run
 Command to run NPM scripts in parallell, but second script waits for a response to begin. Usefull when first command starts up a server and second one should start afterwards.
 
 ```sh
-run-await-run [run-first] [url] [run-second]
+run-await-run <run-first> <url> <run-second>
 ```
 
 ### Example
@@ -26,7 +26,7 @@ run-await-run [run-first] [url] [run-second]
 {
   "scripts": {
     "server": "node ./server.js",
-    "test": "run-await-run server :8080 'playwright test'"
+    "test": "run-await-run server :8080 'npx playwright test'"
   }
 }
 ```

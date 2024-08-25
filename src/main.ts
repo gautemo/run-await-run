@@ -4,7 +4,7 @@ import { spawn } from 'node:child_process'
 
 export async function handleArgs(args: string[]) {
   const firstCommand = getCommand(args)
-  const url = args[0]
+  const url = args.splice(0, 1)[0]
   const secondCommand = getCommand(args)
   if(!firstCommand || !url || !secondCommand) {
     throw new Error('expected: run-await-run <script> <url or port> <script>')
