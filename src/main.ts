@@ -1,6 +1,6 @@
 import { waitResponse } from '@gaute/await-response'
-import { addNpmRunIfargIsScript, convertIfPort, getCommand, getPackageJSONScripts } from './utilsArgs'
-import { spawn } from 'node:child_process'
+import { addNpmRunIfArgIsScript, convertIfPort, getCommand, getPackageJSONScripts } from './utilsArgs'
+import { spawn } from './spawn'
 
 export async function handleArgs(args: string[]) {
   const firstCommand = getCommand(args)
@@ -8,10 +8,6 @@ export async function handleArgs(args: string[]) {
   const secondCommand = getCommand(args)
   if(!firstCommand || !url || !secondCommand) {
     throw new Error('expected: run-await-run <script> <url or port> <script>')
-  }
-  let method: 'HEAD' | 'GET' = 'HEAD'
-  if(args.includes('--get')) {
-    method = 'GET'
   }
   let timeout: number | undefined = undefined
   if(args.includes('--timeout')) {
@@ -28,11 +24,21 @@ export async function handleArgs(args: string[]) {
     }
   }
   const packageJSONScripts = await getPackageJSONScripts()
-  spawn(addNpmRunIfargIsScript(firstCommand, packageJSONScripts), { shell: true, stdio: 'inherit' })
+  const killSpawned = spawn({ arg: addNpmRunIfArgIsScript(firstCommand, packageJSONScripts) })
   await waitResponse(convertIfPort(url), {
-    method,
+    method: args.includes('--get') ? 'GET' : 'HEAD',
     timeout,
     interval,
+  }).catch(error => {
+    console.error(`await error:\n${error}`)
+    killSpawned()
   })
-  spawn(addNpmRunIfargIsScript(secondCommand, packageJSONScripts), { shell: true, stdio: 'inherit' })
+  spawn({ 
+    arg: addNpmRunIfArgIsScript(secondCommand, packageJSONScripts),
+    onExit() {
+      if(!args.includes('--keep-running')) {
+        killSpawned()
+      }
+    }
+  })
 }

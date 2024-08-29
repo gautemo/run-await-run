@@ -19,7 +19,7 @@ export function getCommand(args: string[]) {
   return arg
 }
 
-export function addNpmRunIfargIsScript(arg: string, scripts: Record<string, string>) {
+export function addNpmRunIfArgIsScript(arg: string, scripts: Record<string, string>) {
   if(Object.keys(scripts).includes(arg.split(' ')[0]!)) {
     return `npm run ${arg}`
   }
@@ -60,11 +60,11 @@ if (import.meta.vitest) {
   })
 
   it('add npm run', async () => {
-    expect(addNpmRunIfargIsScript('test', { test: '' })).toBe('npm run test')
+    expect(addNpmRunIfArgIsScript('test', { test: '' })).toBe('npm run test')
   })
 
   it('not add npm run', async () => {
-    expect(addNpmRunIfargIsScript('test', { })).toBe('test')
+    expect(addNpmRunIfArgIsScript('test', { })).toBe('test')
   })
 
   it('convert port', () => {

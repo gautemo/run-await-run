@@ -26,19 +26,20 @@ run-await-run <run-first> <url> <run-second>
 {
   "scripts": {
     "server": "node ./server.js",
-    "test": "run-await-run server :8080 'npx playwright test'"
+    "test": "run-await-run server :8080 'playwright test'"
   }
 }
 ```
 
 ### Options
 
-`position 1` (required): script to run first  
+`position 1` (required): script one will run first  
 `position 2` (required): URL waiting to respond  
-`position 3` (required): script to run when url responds  
+`position 3` (required): script two will run when url responds  
 `--get` (optional): fetches the URL with a GET request. Default is a HEAD request  
-`--timeout` (optional): when to stop waiting in milliseconds. Default is 300000 milliseconds (5 minutes)  
-`--interval` (optional): how often to check if URL responds in milliseconds. Default is 100 milliseconds  
+`--timeout <number>` (optional): when to stop waiting in milliseconds. Default is 300000 milliseconds (5 minutes)  
+`--interval <number>` (optional): how often to check if URL responds in milliseconds. Default is 100 milliseconds  
+`--keep-running` (optional): by default the proccess will exit when script two is completed. This will keep script one alive  
 
 ### Handy features
 
