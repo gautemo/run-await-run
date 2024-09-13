@@ -5,7 +5,6 @@ import kill from 'tree-kill'
 export function spawn(options: { arg: string, onExit?: () => void }) {
   const task = nodeSpawn(options.arg, { shell: true, stdio: 'inherit' })
   task.on('exit', () => {
-    console.log('stpped ' + options.arg)
     options.onExit?.()
   })
   task.on('error', (error) => {
