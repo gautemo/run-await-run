@@ -39,7 +39,6 @@ run-await-run <run-first> <url> <run-second>
 `--get` (optional): fetches the URL with a GET request. Default is a HEAD request  
 `--timeout <number>` (optional): when to stop waiting in milliseconds. Default is 300000 milliseconds (5 minutes)  
 `--interval <number>` (optional): how often to check if URL responds in milliseconds. Default is 100 milliseconds  
-`--keep-running` (optional): by default the proccess will exit when script two is completed. This will keep script one alive  
 
 ### Handy features
 

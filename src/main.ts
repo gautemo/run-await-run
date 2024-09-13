@@ -36,9 +36,7 @@ export async function handleArgs(args: string[]) {
   spawn({ 
     arg: addNpmRunIfArgIsScript(secondCommand, packageJSONScripts),
     onExit() {
-      if(!args.includes('--keep-running')) {
-        killSpawned()
-      }
+      killSpawned()
     }
   })
 }
