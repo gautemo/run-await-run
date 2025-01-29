@@ -4,6 +4,7 @@ Run command, await response, run command
 
 Inspired by [start-server-and-test](https://github.com/bahmutov/start-server-and-test), just tiny compared!
 
+[![NPM Version](https://img.shields.io/npm/v/run-await-run)](https://www.npmjs.com/package/run-await-run)
 [![install size](https://packagephobia.com/badge?p=run-await-run)](https://packagephobia.com/result?p=run-await-run)
 
 ## Install
