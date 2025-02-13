@@ -20,8 +20,8 @@ export function spawn(options: { arg: string, type: '1' | '2', onExit?: () => vo
     process.exit(1)
   })
   
-  task.stdout.on('data', data => logInfo(Buffer.from(data,'utf-8').toString(), { key: options.arg, type: options.type }))
-  task.stderr.on('data', data => logError(Buffer.from(data,'utf-8').toString(), { key: options.arg }))
+  task.stdout.on('data', data => logInfo(Buffer.from(data).toString(), { key: options.arg, type: options.type }))
+  task.stderr.on('data', data => logError(Buffer.from(data).toString(), { key: options.arg }))
 
   return () => {
     if(task.pid) {
