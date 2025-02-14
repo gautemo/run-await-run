@@ -33,7 +33,7 @@ export async function handleArgs(args: string[]) {
   
   const url = convertIfPort(urlInput)
   const method = args.includes('--get') ? 'GET' : 'HEAD'
-  logInfo(`${method} ${url} (timeout=${timeout ?? 60_000}ms, interval=${interval ?? 100}ms)`, { key: 'await', type: 'await' })
+  logInfo(`${method} ${url} (timeout=${timeout ?? 60_000}ms, interval=${interval ?? 100}ms)`, { key: 'await' })
   await waitResponse(url, {
     method,
     timeout,
