@@ -3,6 +3,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "lib": ["ESNext"],
+    "target": "esnext",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "types": [

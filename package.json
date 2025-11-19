@@ -11,7 +11,7 @@
     "test": "vitest",
     "server": "tsx ./playground/server.ts",
     "test-run-await-run": "run-await-run 'tsx ./playground/server.ts' http://localhost:8080/ hello",
-    "hello": "echo \"yo\"",
+    "hello": "echo yo",
     "fail": "exit 1"
   },
   "repository": {
