@@ -30,13 +30,13 @@
   "homepage": "https://github.com/gautemo/run-await-run#readme",
   "devDependencies": {
     "@gaute/await-response": "npm:@jsr/gaute__await-response@^0.4.0",
-    "@std/fmt": "npm:@jsr/std__fmt@^1.0.5",
-    "@types/node": "^22.13.2",
-    "h3": "^1.15.0",
-    "tsup": "^8.3.6",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.5"
+    "@std/fmt": "npm:@jsr/std__fmt@^1.0.8",
+    "@types/node": "^24.10.1",
+    "h3": "^1.15.4",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.10"
   },
   "dependencies": {
     "tree-kill": "^1.2.2"
