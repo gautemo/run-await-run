@@ -21,7 +21,7 @@ export function getCommand(args: string[]) {
 
 export function addNpmRunIfArgIsScript(arg: string, scripts: Record<string, string>) {
   const scriptKeys = Object.keys(scripts)
-  return arg.replaceAll(/^\w+|(?<=(\|\||&{1,2})\s)\w+/g, (command) => {
+  return arg.replaceAll(/^\S+|(?<=(\|\||&{1,2})\s)\S+/g, (command) => {
     if(scriptKeys.includes(command)) {
       return `npm run ${command}`
     }
@@ -72,8 +72,8 @@ if (import.meta.vitest) {
 
   it('add npm run on chained commands', () => {
     expect(
-      addNpmRunIfArgIsScript('test && test --flag && server || test & server --flag & dev', { test: '', server: '' }),
-    ).toBe('npm run test && npm run test --flag && npm run server || npm run test & npm run server --flag & dev')
+      addNpmRunIfArgIsScript('test && test --flag && a:b || test & a:b --flag & dev', { test: '', 'a:b': '' }),
+    ).toBe('npm run test && npm run test --flag && npm run a:b || npm run test & npm run a:b --flag & dev')
   })
 
   it('convert port', () => {
